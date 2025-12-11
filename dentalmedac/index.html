@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DavanteDent - Gestión de Citas</title>
+    <link rel="icon" type="diente.png" href="diente.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Variables de Diseño (Limpieza y Salud) */
+        :root {
+            --primary-color: #00aaff; /* Celeste Brillante - Limpieza */
+            --primary-dark: #0088cc;
+            --secondary-color: #f0f8ff; /* Fondo Azul muy Suave */
+            --content-bg: #ffffff; /* Contenido en Blanco */
+            --text-color: #333333;
+            --error-color: #ff4757;
+            --border-radius: 10px;
+            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Reset y Tipografía */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Cabecera y Pie */
+        header {
+            background-color: var(--primary-color);
+            color: var(--content-bg);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        main {
+            max-width: 1400px; /* Un poco más ancho para la tabla */
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 2rem;
+        }
+
+        footer {
+            background-color: var(--text-color);
+            color: #ccc;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+        }
+
+        /* Componentes - Diseño de Tarjeta Limpio */
+        #formulario-citas, #tabla-citas {
+            background: var(--content-bg);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+        }
+        
+        #formulario-citas:hover, #tabla-citas:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        /* Formulario y Controles */
+        fieldset {
+            border: 1px solid #e0e0e0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            transition: border-color 0.3s;
+        }
+        
+        fieldset:focus-within {
+             border-color: var(--primary-color); /* Realce al enfocar un campo */
+        }
+
+        legend {
+            font-weight: 700;
+            color: var(--primary-color);
+            padding: 0 15px;
+            font-size: 1.1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="datetime-local"],
+        textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.15);
+            outline: none;
+        }
+
+        /* Botones de Acción */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-right: 15px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 170, 255, 0.3);
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        button#limpiarBtn {
+            background-color: #6c757d;
+            box-shadow: none;
+        }
+
+        button#limpiarBtn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        button.modify-btn, button.delete-btn {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            margin: 0;
+            margin-right: 5px;
+            box-shadow: none;
+        }
+        
+        button.delete-btn {
+            background-color: #dc3545;
+        }
+        button.delete-btn:hover {
+            background-color: #c82333;
+        }
+
+
+        /* Errores y Validación */
+        .error-msg {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        .input-error {
+            border-color: var(--error-color) !important;
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.25) !important;
+        }
+
+        /* Tabla de Citas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        thead {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        td:last-child {
+            white-space: nowrap; /* Evita que los botones se rompan */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Diseño Responsivo (Desktop) */
+        @media (min-width: 1024px) {
+            main {
+                /* Formulario (1.2 partes) y Tabla (2.5 partes) */
+                grid-template-columns: 1.2fr 2.5fr; 
+                gap: 3rem;
+            }
+        }
+    </style>
+    </head>
+<body>
+
+    <header>
+        <h1><img src="diente.png" height="80" width="70"> DavanteDent</h1>
+        <p>Sonríe hoy, protege tu mañana.</p>
+    </header>
+
+    <main>
+        <section id="formulario-citas">
+            <h2>8:00-19:00 </h2>
+            <h2>Lunes a Viernes</h2>
+            <h2>Citas cada 30 minutos</h2>
+            
+            <form id="citaForm">
+                <input type="hidden" id="citaId" name="citaId" value="">
+
+                <fieldset>
+                    <legend>📅 Datos de la Cita (Horario de 08:00 a 18:30)</legend>
+                    <label for="fechaCita">Fecha y Hora (Intervalos de 30 minutos):</label>
+                    <input 
+                        type="datetime-local" 
+                        id="fechaCita" 
+                        name="fechaCita" 
+                        required
+                        step="1800"  >
+                    <span class="error-msg" id="error-fechaCita"></span>
+
+                    <label for="observaciones">Observaciones:</label>
+                    <textarea id="observaciones" name="observaciones" rows="4" placeholder="Detalles relevantes de la cita..."></textarea>
+                </fieldset>
+
+                <fieldset>
+                    <legend>👤 Datos del Paciente</legend>
+
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Nombre del paciente">
+                    <span class="error-msg" id="error-nombre"></span>
+
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" required placeholder="Apellidos del paciente">
+                    <span class="error-msg" id="error-apellidos"></span>
+
+                    <label for="dni">DNI:</label>
+                    <input type="text" id="dni" name="dni" required pattern="[0-9]{8}[A-Za-z]{1}" placeholder="Ej: 12345678A">
+                    <span class="error-msg" id="error-dni"></span>
+
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" required pattern="[0-9]{9}" placeholder="Ej: 600112233">
+                    <span class="error-msg" id="error-telefono"></span>
+
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    <span class="error-msg" id="error-fechaNacimiento"></span>
+                </fieldset>
+
+                <div>
+                    <button type="submit" id="guardarBtn">Guardar Cita</button>
+                    <button type="button" id="limpiarBtn">Limpiar Formulario</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="tabla-citas">
+            <h2>Listado de Próximas Citas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>Fecha y Hora</th>
+                        <th>Nombre Completo</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="citasBody">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>DavanteDent | 📞 900 123 456 | 📍 C/ La Corredera 12, Utrera, Sevilla.</p>
+    </footer>
+
+    <script src="medac.js"></script>
+</body>
+</html>
