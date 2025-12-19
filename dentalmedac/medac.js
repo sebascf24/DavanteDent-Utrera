@@ -221,3 +221,4 @@ limpiarBtn.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => renderCitasTable(getCitas()));
+
